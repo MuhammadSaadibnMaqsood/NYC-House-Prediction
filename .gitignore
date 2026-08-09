@@ -1,0 +1,12 @@
+# ML model
+model_pipeline.pkl
+
+# Python
+__pycache__/
+*.pyc
+
+# Environment variables
+.env
+
+# Jupyter
+.ipynb_checkpoints/
