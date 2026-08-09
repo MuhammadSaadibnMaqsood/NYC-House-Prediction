@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Response
 from fastapi.middleware.cors import CORSMiddleware
 import pandas as pd
 from pydantic import BaseModel, Field
@@ -93,7 +93,11 @@ def greet():
     return "HALLO"
 
 
-@app.post("/predict", response_model=PredictionResponse)
+@app.options("/predict")
+def predict_options():
+    return Response(status_code=200)
+
+
 @app.post("/predict", response_model=PredictionResponse)
 def predict(features: Features):
 

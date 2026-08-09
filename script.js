@@ -43,7 +43,8 @@ exampleButton.addEventListener("click", () => {
   resultCard.classList.add("hidden");
 });
 
-const API_ORIGIN = window.location.protocol === "file:" ? "http://localhost:8000" : window.location.origin;
+const BACKEND_ORIGIN = "http://127.0.0.1:8000";
+const API_ORIGIN = BACKEND_ORIGIN;
 
 form.addEventListener("submit", async (event) => {
   event.preventDefault();
