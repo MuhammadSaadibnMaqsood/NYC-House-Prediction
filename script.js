@@ -1,10 +1,18 @@
 const form = document.getElementById("prediction-form");
-const resultCard = document.getElementById("result-card");
+const exampleButton = document.getElementById("example-btn");
+const loadingOverlay = document.getElementById("loading-overlay");
+const errorMessage = document.getElementById("error-message");
+
+const certificateBlank = document.getElementById("certificate-blank");
+const certificateResult = document.getElementById("certificate-result");
+const stampEl = document.getElementById("stamp");
 const resultType = document.getElementById("result-type");
 const resultConfidence = document.getElementById("result-confidence");
-const errorMessage = document.getElementById("error-message");
-const loadingOverlay = document.getElementById("loading-overlay");
-const exampleButton = document.getElementById("example-btn");
+const gaugeFill = document.getElementById("gauge-fill");
+const gaugeNeedle = document.getElementById("gauge-needle");
+const caseNumber = document.getElementById("case-number");
+
+const GAUGE_DASH_LENGTH = 251; // matches stroke-dasharray in styles.css
 
 const fieldIds = [
   "neighbourhood_group",
@@ -19,6 +27,18 @@ const fieldIds = [
   "availability_365",
 ];
 
+const BACKEND_ORIGIN = "http://127.0.0.1:8000";
+const API_ORIGIN = BACKEND_ORIGIN;
+
+// ---- Case number: filing-flavor, generated on load ----
+function setCaseNumber() {
+  const year = new Date().getFullYear();
+  const rand = Math.floor(1000 + Math.random() * 9000);
+  caseNumber.textContent = `${year}-${rand}`;
+}
+setCaseNumber();
+
+// ---- Demo values ----
 exampleButton.addEventListener("click", () => {
   const values = {
     neighbourhood_group: "Brooklyn",
@@ -40,16 +60,54 @@ exampleButton.addEventListener("click", () => {
     }
   });
   hideError();
-  resultCard.classList.add("hidden");
+  resetCertificate();
 });
 
-const BACKEND_ORIGIN = "http://127.0.0.1:8000";
-const API_ORIGIN = BACKEND_ORIGIN;
+// ---- Certificate state helpers ----
+function resetCertificate() {
+  certificateResult.classList.add("hidden");
+  certificateBlank.classList.remove("hidden");
+}
 
+function setGauge(confidencePercent) {
+  const clamped = Math.max(0, Math.min(100, confidencePercent));
+  const offset = GAUGE_DASH_LENGTH - (GAUGE_DASH_LENGTH * clamped) / 100;
+
+  // Reset without transition so repeated submissions replay the animation.
+  gaugeFill.style.transition = "none";
+  gaugeFill.style.strokeDashoffset = String(GAUGE_DASH_LENGTH);
+  gaugeNeedle.style.transition = "none";
+  gaugeNeedle.style.transform = "translateX(-50%) rotate(-90deg)";
+  gaugeFill.getBoundingClientRect(); // force reflow
+
+  requestAnimationFrame(() => {
+    gaugeFill.style.transition = "";
+    gaugeFill.style.strokeDashoffset = String(offset);
+    gaugeNeedle.style.transition = "";
+    const angle = -90 + (clamped / 100) * 180;
+    gaugeNeedle.style.transform = `translateX(-50%) rotate(${angle}deg)`;
+  });
+}
+
+function renderResult(predictedType, confidencePercent) {
+  certificateBlank.classList.add("hidden");
+  certificateResult.classList.remove("hidden");
+
+  // Restart the stamp animation on every submission.
+  stampEl.style.animation = "none";
+  stampEl.offsetWidth; // force reflow
+  stampEl.style.animation = "";
+
+  resultType.textContent = predictedType || "Unknown";
+  resultConfidence.textContent = `${confidencePercent.toFixed(1)}%`;
+  setGauge(confidencePercent);
+}
+
+// ---- Submit handler ----
 form.addEventListener("submit", async (event) => {
   event.preventDefault();
   hideError();
-  resultCard.classList.add("hidden");
+  resetCertificate();
   showLoader(true);
 
   const payload = {};
@@ -82,9 +140,7 @@ form.addEventListener("submit", async (event) => {
     }
 
     const data = await response.json();
-    resultType.textContent = data.predicted_type || "Unknown";
-    resultConfidence.textContent = `Confidence: ${(data.probability * 100).toFixed(1)}%`;
-    resultCard.classList.remove("hidden");
+    renderResult(data.predicted_type, (data.probability ?? 0) * 100);
   } catch (error) {
     showError(error.message || "Something went wrong while predicting.");
   } finally {

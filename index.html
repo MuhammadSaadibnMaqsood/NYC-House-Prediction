@@ -3,184 +3,226 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>NYC House Price Predictor</title>
+    <title>STR-7 · Short-Term Rental Classification</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;700;800&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
+    <div class="grid-backdrop" aria-hidden="true"></div>
+
     <div class="page-shell">
-      <header class="hero-panel">
-        <div class="hero-copy">
-          <span class="eyebrow">Predict with confidence</span>
-          <h1>NYC Short-Term Rental Price Classifier</h1>
-          <p>
-            Enter property details and let the machine learning model tell you the
-            most likely room type and prediction confidence instantly.
+      <header class="case-bar">
+        <span class="case-bar__dept">City of New York &middot; Bureau of Listing Verification</span>
+        <span class="case-bar__no">Form STR&#8209;7 &middot; Case No. <span id="case-number">—</span></span>
+      </header>
+
+      <section class="masthead">
+        <div class="masthead__text">
+          <p class="masthead__eyebrow">Automated Classification Service</p>
+          <h1>Short&#8209;Term Rental<br /><span>Room Type</span> Application</h1>
+          <p class="masthead__desc">
+            File a listing's details below. The classification model reviews the
+            record and returns a determined room type, filed with a measured
+            confidence.
           </p>
         </div>
-        <div class="hero-actions">
-          <button class="primary-btn" id="example-btn" type="button">
-            Load Demo Values
-          </button>
-          <a href="#prediction-form" class="secondary-btn">
-            Start Prediction
-          </a>
+        <div class="masthead__actions">
+          <button class="btn btn--ink" id="example-btn" type="button">Load Sample File</button>
+          <a href="#application" class="btn btn--outline">Begin Filing &darr;</a>
         </div>
       </header>
 
-      <main class="main-grid">
-        <section class="form-card" id="prediction-form-card">
-          <div class="card-header">
+      <main class="ledger">
+        <section class="application" id="application" aria-labelledby="application-heading">
+          <div class="application__head">
             <div>
-              <p class="section-label">Interactive Prediction</p>
-              <h2>Fill in your property details</h2>
+              <p class="section-tag">Section A</p>
+              <h2 id="application-heading">Property &amp; Listing Details</h2>
             </div>
-            <div class="badge">FastAPI</div>
+            <span class="stamp-mini">Model&nbsp;Served&nbsp;via&nbsp;FastAPI</span>
           </div>
 
-          <form class="predict-form" id="prediction-form">
-            <div class="form-row">
-              <div class="field-group">
-                <label for="neighbourhood_group">Neighbourhood Group</label>
-                <select id="neighbourhood_group" name="neighbourhood_group" required>
-                  <option value="">Select group</option>
-                  <option>Brooklyn</option>
-                  <option>Manhattan</option>
-                  <option>Queens</option>
-                  <option>Staten Island</option>
-                  <option>Bronx</option>
-                </select>
+          <form class="form" id="prediction-form" novalidate>
+            <fieldset class="form__group">
+              <legend>Location</legend>
+              <div class="form__row">
+                <div class="field">
+                  <label for="neighbourhood_group">Borough</label>
+                  <select id="neighbourhood_group" name="neighbourhood_group" required>
+                    <option value="">Select borough</option>
+                    <option>Brooklyn</option>
+                    <option>Manhattan</option>
+                    <option>Queens</option>
+                    <option>Staten Island</option>
+                    <option>Bronx</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label for="neighbourhood">Neighbourhood</label>
+                  <select id="neighbourhood" name="neighbourhood" required>
+                    <option value="">Select neighbourhood</option>
+                    <option>Kensington</option>
+                    <option>Midtown</option>
+                    <option>Harlem</option>
+                    <option>Clinton Hill</option>
+                    <option>East Harlem</option>
+                    <option>Murray Hill</option>
+                    <option>Bedford-Stuyvesant</option>
+                    <option>Hell's Kitchen</option>
+                    <option>Upper West Side</option>
+                    <option>Chinatown</option>
+                    <option>Williamsburg</option>
+                    <option>Astoria</option>
+                    <option>Bushwick</option>
+                    <option>Crown Heights</option>
+                    <option>Greenpoint</option>
+                    <option>Lower East Side</option>
+                    <option>Upper East Side</option>
+                    <option>Financial District</option>
+                    <option>SoHo</option>
+                    <option>Tribeca</option>
+                    <option>Washington Heights</option>
+                    <option>Flatbush</option>
+                    <option>Jackson Heights</option>
+                    <option>Flushing</option>
+                    <option>Forest Hills</option>
+                    <option>Long Island City</option>
+                    <option>Brighton Beach</option>
+                    <option>Bay Ridge</option>
+                    <option>St. George</option>
+                    <option>New Dorp</option>
+                    <option>Tottenville</option>
+                    <option>Rosebank</option>
+                    <option>Unionport</option>
+                    <option>Mill Basin</option>
+                    <option>Arden Heights</option>
+                    <option>Bull's Head</option>
+                    <option>Fort Wadsworth</option>
+                    <option>Breezy Point</option>
+                    <option>Willowbrook</option>
+                  </select>
+                </div>
               </div>
-              <div class="field-group">
-                <label for="neighbourhood">Neighbourhood</label>
-                <select id="neighbourhood" name="neighbourhood" required>
-                  <option value="">Select neighbourhood</option>
-                  <option>Kensington</option>
-                  <option>Midtown</option>
-                  <option>Harlem</option>
-                  <option>Clinton Hill</option>
-                  <option>East Harlem</option>
-                  <option>Murray Hill</option>
-                  <option>Bedford-Stuyvesant</option>
-                  <option>Hell's Kitchen</option>
-                  <option>Upper West Side</option>
-                  <option>Chinatown</option>
-                  <option>Williamsburg</option>
-                  <option>Astoria</option>
-                  <option>Bushwick</option>
-                  <option>Crown Heights</option>
-                  <option>Greenpoint</option>
-                  <option>Lower East Side</option>
-                  <option>Upper East Side</option>
-                  <option>Financial District</option>
-                  <option>SoHo</option>
-                  <option>Tribeca</option>
-                  <option>Washington Heights</option>
-                  <option>Flatbush</option>
-                  <option>Jackson Heights</option>
-                  <option>Flushing</option>
-                  <option>Forest Hills</option>
-                  <option>Long Island City</option>
-                  <option>Brighton Beach</option>
-                  <option>Bay Ridge</option>
-                  <option>St. George</option>
-                  <option>New Dorp</option>
-                  <option>Tottenville</option>
-                  <option>Rosebank</option>
-                  <option>Unionport</option>
-                  <option>Mill Basin</option>
-                  <option>Arden Heights</option>
-                  <option>Bull's Head</option>
-                  <option>Fort Wadsworth</option>
-                  <option>Breezy Point</option>
-                  <option>Willowbrook</option>
-                </select>
+              <div class="form__row form__row--split4">
+                <div class="field">
+                  <label for="latitude">Latitude</label>
+                  <input id="latitude" name="latitude" type="number" step="0.0001" min="-90" max="90" required />
+                </div>
+                <div class="field">
+                  <label for="longitude">Longitude</label>
+                  <input id="longitude" name="longitude" type="number" step="0.0001" min="-180" max="180" required />
+                </div>
               </div>
-            </div>
+            </fieldset>
 
-            <div class="form-row split-4">
-              <div class="field-group">
-                <label for="latitude">Latitude</label>
-                <input id="latitude" name="latitude" type="number" step="0.0001" min="-90" max="90" required />
+            <fieldset class="form__group">
+              <legend>Listing Economics</legend>
+              <div class="form__row form__row--split4">
+                <div class="field">
+                  <label for="price">Price ($/night)</label>
+                  <input id="price" name="price" type="number" step="0.01" min="0" required />
+                </div>
+                <div class="field">
+                  <label for="minimum_nights">Min. Nights</label>
+                  <input id="minimum_nights" name="minimum_nights" type="number" min="0" max="365" required />
+                </div>
+                <div class="field">
+                  <label for="number_of_reviews">Reviews</label>
+                  <input id="number_of_reviews" name="number_of_reviews" type="number" min="0" step="1" required />
+                </div>
+                <div class="field">
+                  <label for="reviews_per_month">Reviews / Mo.</label>
+                  <input id="reviews_per_month" name="reviews_per_month" type="number" min="0" step="0.01" required />
+                </div>
               </div>
-              <div class="field-group">
-                <label for="longitude">Longitude</label>
-                <input id="longitude" name="longitude" type="number" step="0.0001" min="-180" max="180" required />
-              </div>
-              <div class="field-group">
-                <label for="price">Price</label>
-                <input id="price" name="price" type="number" step="0.01" min="0" required />
-              </div>
-              <div class="field-group">
-                <label for="minimum_nights">Min Nights</label>
-                <input id="minimum_nights" name="minimum_nights" type="number" min="0" max="365" required />
-              </div>
-            </div>
+            </fieldset>
 
-            <div class="form-row split-4">
-              <div class="field-group">
-                <label for="number_of_reviews">Reviews</label>
-                <input id="number_of_reviews" name="number_of_reviews" type="number" min="0" step="1" required />
+            <fieldset class="form__group">
+              <legend>Host Record</legend>
+              <div class="form__row form__row--split2">
+                <div class="field">
+                  <label for="calculated_host_listings_count">Host Listings Count</label>
+                  <input id="calculated_host_listings_count" name="calculated_host_listings_count" type="number" min="0" step="1" required />
+                </div>
+                <div class="field">
+                  <label for="availability_365">Availability (days/yr)</label>
+                  <input id="availability_365" name="availability_365" type="number" min="0" max="365" step="1" required />
+                </div>
               </div>
-              <div class="field-group">
-                <label for="reviews_per_month">Reviews / Month</label>
-                <input id="reviews_per_month" name="reviews_per_month" type="number" min="0" step="0.01" required />
-              </div>
-              <div class="field-group">
-                <label for="calculated_host_listings_count">Host Listings</label>
-                <input id="calculated_host_listings_count" name="calculated_host_listings_count" type="number" min="0" step="1" required />
-              </div>
-              <div class="field-group">
-                <label for="availability_365">Availability</label>
-                <input id="availability_365" name="availability_365" type="number" min="0" max="365" step="1" required />
-              </div>
-            </div>
+            </fieldset>
 
-            <div class="form-actions">
-              <button class="primary-btn" type="submit">Predict Room Type</button>
-              <p class="hint-text">Results are generated by the trained model in `main.py`.</p>
+            <div class="form__submit">
+              <button class="btn btn--stamp" type="submit">
+                <span>Submit for Classification</span>
+              </button>
+              <p class="form__hint">Predictions are generated live by the model in <code>main.py</code>.</p>
             </div>
           </form>
 
-          <div class="result-card hidden" id="result-card">
-            <p class="result-label">Prediction</p>
-            <h3 id="result-type">—</h3>
-            <p class="result-confidence" id="result-confidence">Confidence: —</p>
-            <p class="result-note">
-              This score is the probability assigned to the predicted class by the ML model.
-            </p>
-          </div>
-
-          <div class="error-message hidden" id="error-message"></div>
+          <div class="notice notice--error hidden" id="error-message" role="alert"></div>
         </section>
 
-        <section class="info-card">
-          <div class="info-header">
-            <p class="section-label">Why it works</p>
-            <h2>Smart model input</h2>
+        <aside class="certificate" id="certificate" aria-live="polite">
+          <div class="certificate__header">
+            <p class="section-tag">Section B</p>
+            <h2>Certificate of Classification</h2>
           </div>
-          <ul class="feature-list">
-            <li>
-              <strong>Clean inputs</strong>
-              <span>All form fields match the trained model features exactly.</span>
-            </li>
-            <li>
-              <strong>Confidence first</strong>
-              <span>Every prediction returns the model’s probability score.</span>
-            </li>
-            <li>
-              <strong>Fast experience</strong>
-              <span>Lightweight UI with instant animated feedback.</span>
-            </li>
-          </ul>
-          <div class="visual-wave"></div>
-        </section>
+
+          <div class="certificate__body">
+            <div class="certificate__blank" id="certificate-blank">
+              <svg width="46" height="46" viewBox="0 0 46 46" fill="none" aria-hidden="true">
+                <circle cx="23" cy="23" r="21" stroke="currentColor" stroke-width="1.5" stroke-dasharray="4 4" />
+                <path d="M14 24l6 6 12-14" stroke="currentColor" stroke-width="1.5" fill="none" />
+              </svg>
+              <p>Awaiting Application</p>
+              <span>Submit the form to generate a determination.</span>
+            </div>
+
+            <div class="certificate__result hidden" id="certificate-result">
+              <div class="stamp" id="stamp">
+                <span class="stamp__type" id="result-type">ENTIRE HOME</span>
+                <span class="stamp__sub">Classified</span>
+              </div>
+
+              <div class="gauge">
+                <svg viewBox="0 0 200 112" class="gauge__svg" aria-hidden="true">
+                  <path class="gauge__track" d="M12,100 A88,88 0 0 1 188,100" />
+                  <path class="gauge__fill" id="gauge-fill" d="M12,100 A88,88 0 0 1 188,100" />
+                  <line class="gauge__tick" x1="12" y1="100" x2="20" y2="93" />
+                  <line class="gauge__tick" x1="100" y1="12" x2="100" y2="21" />
+                  <line class="gauge__tick" x1="188" y1="100" x2="180" y2="93" />
+                </svg>
+                <div class="gauge__needle" id="gauge-needle"></div>
+                <p class="gauge__value" id="result-confidence">—%</p>
+                <p class="gauge__label">Model Confidence</p>
+              </div>
+
+              <p class="certificate__note">
+                This determination reflects the class assigned the highest
+                probability by the trained classifier.
+              </p>
+            </div>
+          </div>
+
+          <div class="ledger-notes">
+            <p class="section-tag">Inspector's Notes</p>
+            <ul>
+              <li><strong>Exact-match fields</strong><span>Every input maps directly to a trained model feature.</span></li>
+              <li><strong>Confidence on record</strong><span>Every determination is filed with its probability score.</span></li>
+              <li><strong>Fast turnaround</strong><span>Results return in real time — no queue.</span></li>
+            </ul>
+          </div>
+        </aside>
       </main>
     </div>
 
-    <div class="page-backdrop"></div>
     <div class="loading-overlay hidden" id="loading-overlay">
-      <div class="spinner"></div>
-      <p>Predicting...</p>
+      <div class="loading-overlay__stamp">Processing&hellip;</div>
     </div>
 
     <script src="script.js" defer></script>
