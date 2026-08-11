@@ -1,22 +1,14 @@
-from pathlib import Path
-
 from fastapi import FastAPI, Response
 from fastapi.middleware.cors import CORSMiddleware
 import pandas as pd
 from pydantic import BaseModel, Field
 import joblib
+from pathlib import Path
 
-MODEL_PATH = Path(__file__).with_name("model_pipeline.pkl")
+BASE_DIR = Path(__file__).resolve().parent
+MODEL_PATH = BASE_DIR / "model_pipeline.pkl"
 
-
-def load_model():
-    if MODEL_PATH.exists():
-        return joblib.load(MODEL_PATH)
-    return None
-
-
-model = load_model()
-
+model = joblib.load(MODEL_PATH)
 
 COLUMNS = [
     "neighbourhood_group",
@@ -94,9 +86,10 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
     allow_credentials=True,
-    allow_methods=["*"] ,
+    allow_methods=["*"],
     allow_headers=["*"],
 )
+
 
 @app.get("/")
 def greet():
@@ -111,23 +104,37 @@ def predict_options():
 @app.post("/predict", response_model=PredictionResponse)
 def predict(features: Features):
 
-    # Convert Pydantic model to dictionary
-    data = features.model_dump()
+    try:
+        # Convert Pydantic model to dictionary
+        data = features.model_dump()
 
-    # Create DataFrame with the same columns used during training
-    row = pd.DataFrame([data], columns=COLUMNS)
+        print("Received data:", data)
 
-    # Prediction
-    pred = model.predict(row)
+        # Create DataFrame
+        row = pd.DataFrame([data], columns=COLUMNS)
 
-    # Probabilities
-    probabilities = model.predict_proba(row)
+        print("DataFrame:")
+        print(row)
 
-    # Get probability of the predicted class
-    predicted_class_index = list(model.classes_).index(pred[0])
-    probability = probabilities[0][predicted_class_index]
+        # Prediction
+        pred = model.predict(row)
 
-    return PredictionResponse(
-        predicted_type=str(pred[0]),
-        probability=float(probability)
-    )
+        print("Prediction:", pred)
+
+        # Probabilities
+        probabilities = model.predict_proba(row)
+
+        print("Probabilities:", probabilities)
+
+        # Get probability of predicted class
+        predicted_class_index = list(model.classes_).index(pred[0])
+
+        probability = probabilities[0][predicted_class_index]
+
+        return PredictionResponse(
+            predicted_type=str(pred[0]), probability=float(probability)
+        )
+
+    except Exception as e:
+        print("PREDICTION ERROR:", repr(e))
+        raise
