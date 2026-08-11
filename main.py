@@ -1,11 +1,21 @@
+from pathlib import Path
+
 from fastapi import FastAPI, Response
 from fastapi.middleware.cors import CORSMiddleware
 import pandas as pd
 from pydantic import BaseModel, Field
 import joblib
 
-# import model
-model = joblib.load("model_pipeline.pkl")
+MODEL_PATH = Path(__file__).with_name("model_pipeline.pkl")
+
+
+def load_model():
+    if MODEL_PATH.exists():
+        return joblib.load(MODEL_PATH)
+    return None
+
+
+model = load_model()
 
 
 COLUMNS = [

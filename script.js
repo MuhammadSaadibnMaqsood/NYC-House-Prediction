@@ -27,8 +27,11 @@ const fieldIds = [
   "availability_365",
 ];
 
-const BACKEND_ORIGIN = "http://127.0.0.1:8000";
-const API_ORIGIN = BACKEND_ORIGIN;
+const isLocalEnvironment = ["localhost", "127.0.0.1"].includes(window.location.hostname);
+const API_ORIGIN = isLocalEnvironment
+  ? "http://127.0.0.1:8000"
+  : (window.__BACKEND_URL__ || window.location.origin);
+const API_PATH = "/predict";
 
 // ---- Case number: filing-flavor, generated on load ----
 function setCaseNumber() {
@@ -126,7 +129,7 @@ form.addEventListener("submit", async (event) => {
   });
 
   try {
-    const response = await fetch(`${API_ORIGIN}/predict`, {
+    const response = await fetch(`${API_ORIGIN}${API_PATH}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
